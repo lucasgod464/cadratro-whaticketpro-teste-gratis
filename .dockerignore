@@ -5,3 +5,6 @@ replit.nix
 README.md
 Dockerfile
 .dockerignore
+node_modules/
+*.log
+.env
