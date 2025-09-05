@@ -1,0 +1,7 @@
+attached_assets/
+.replit
+replit.nix
+.gitignore
+README.md
+Dockerfile
+.dockerignore
