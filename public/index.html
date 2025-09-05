@@ -72,6 +72,95 @@
       opacity: 0.7;
       pointer-events: none;
     }
+
+    /* Cookie Banner Styles */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(124, 58, 237, 0.2);
+      padding: 20px;
+      z-index: 1000;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .cookie-banner.show {
+      transform: translateY(0);
+    }
+
+    .cookie-banner-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .cookie-text {
+      flex: 1;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .cookie-buttons {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .cookie-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .cookie-btn-accept {
+      background: linear-gradient(to right, #7c3aed, #a855f7);
+      color: white;
+    }
+
+    .cookie-btn-accept:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .cookie-btn-decline {
+      background: #f3f4f6;
+      color: #6b7280;
+      border: 1px solid #d1d5db;
+    }
+
+    .cookie-btn-decline:hover {
+      background: #e5e7eb;
+    }
+
+    @media (max-width: 768px) {
+      .cookie-banner-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .cookie-buttons {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .cookie-btn {
+        flex: 1;
+        max-width: 120px;
+      }
+    }
   </style>
 </head>
 
@@ -79,6 +168,24 @@
 
   <!-- tsParticles Background -->
   <div id="tsparticles"></div>
+
+  <!-- Cookie Banner -->
+  <div id="cookieBanner" class="cookie-banner">
+    <div class="cookie-banner-content">
+      <div class="cookie-text">
+        <strong>🍪 Utilizamos cookies</strong><br>
+        Este site utiliza cookies para melhorar sua experiência de navegação e personalizar conteúdo. Ao continuar navegando, você concorda com nossa política de cookies.
+      </div>
+      <div class="cookie-buttons">
+        <button id="acceptCookies" class="cookie-btn cookie-btn-accept">
+          <i class="fas fa-check mr-1"></i>Aceitar
+        </button>
+        <button id="declineCookies" class="cookie-btn cookie-btn-decline">
+          <i class="fas fa-times mr-1"></i>Recusar
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Container -->
   <div class="max-w-2xl w-full glass rounded-2xl p-8 shadow-xl relative z-10">
@@ -310,8 +417,50 @@
       }
     });
 
-    // Carregar configurações quando a página carregar
-    document.addEventListener('DOMContentLoaded', loadConfig);
+    // Cookie Banner Management
+    function showCookieBanner() {
+      const cookieBanner = document.getElementById('cookieBanner');
+      const hasConsent = localStorage.getItem('cookieConsent');
+      
+      if (!hasConsent) {
+        setTimeout(() => {
+          cookieBanner.classList.add('show');
+        }, 1000); // Show after 1 second
+      }
+    }
+
+    function hideCookieBanner() {
+      const cookieBanner = document.getElementById('cookieBanner');
+      cookieBanner.classList.remove('show');
+    }
+
+    function setCookieConsent(accepted) {
+      localStorage.setItem('cookieConsent', accepted ? 'accepted' : 'declined');
+      localStorage.setItem('cookieConsentDate', new Date().toISOString());
+      hideCookieBanner();
+      
+      if (accepted) {
+        // Aqui você pode ativar analytics, tracking, etc.
+        console.log('Cookies aceitos - Analytics podem ser ativados');
+      } else {
+        console.log('Cookies recusados - Apenas cookies essenciais');
+      }
+    }
+
+    // Event listeners para os botões de cookie
+    document.getElementById('acceptCookies').addEventListener('click', () => {
+      setCookieConsent(true);
+    });
+
+    document.getElementById('declineCookies').addEventListener('click', () => {
+      setCookieConsent(false);
+    });
+
+    // Carregar configurações e mostrar banner quando a página carregar
+    document.addEventListener('DOMContentLoaded', () => {
+      loadConfig();
+      showCookieBanner();
+    });
   </script>
 
 </body>
