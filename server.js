@@ -17,6 +17,7 @@ const APP_TITLE = process.env.APP_TITLE || 'WHATICKET PRO';
 const APP_SUBTITLE = process.env.APP_SUBTITLE || 'Bem-vindo ao Futuro da Automação!';
 const APP_DESCRIPTION = process.env.APP_DESCRIPTION || 'Junte-se a milhares de empresas que já transformaram seus processos';
 const FREE_TRIAL_DAYS = process.env.FREE_TRIAL_DAYS || '7';
+const REDIRECT_URL = process.env.REDIRECT_URL || '';
 
 // Rota para obter configurações da aplicação
 app.get('/api/config', (req, res) => {
@@ -25,7 +26,8 @@ app.get('/api/config', (req, res) => {
     appTitle: APP_TITLE,
     appSubtitle: APP_SUBTITLE,
     appDescription: APP_DESCRIPTION,
-    freeTrialDays: FREE_TRIAL_DAYS
+    freeTrialDays: FREE_TRIAL_DAYS,
+    redirectUrl: REDIRECT_URL
   });
 });
 
@@ -74,7 +76,8 @@ app.post('/api/signup', async (req, res) => {
     if (response.ok) {
       res.json({ 
         success: true, 
-        message: 'Conta criada com sucesso!' 
+        message: 'Conta criada com sucesso!',
+        redirectUrl: REDIRECT_URL 
       });
     } else {
       throw new Error(`Webhook retornou status ${response.status}`);

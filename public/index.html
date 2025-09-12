@@ -405,6 +405,13 @@
         if (result.success) {
           showAlert(result.message, 'success');
           signupForm.reset(); // Limpar formulário
+          
+          // Redirecionar se houver URL configurada
+          if (result.redirectUrl && result.redirectUrl.trim() !== '') {
+            setTimeout(() => {
+              window.location.href = result.redirectUrl;
+            }, 2000); // Aguarda 2 segundos para o usuário ver a mensagem de sucesso
+          }
         } else {
           showAlert(result.message, 'error');
         }
