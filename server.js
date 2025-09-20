@@ -4,20 +4,20 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-
-// Configurações carregadas diretamente das variáveis de ambiente (.env)
 const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Configurações do webhook a partir das variáveis de ambiente
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'https://n8n.yuccie.pro/webhook/8eada2a9-b8b9-4b45-beca-a33760afb3e1';
 const APP_TITLE = process.env.APP_TITLE || 'WHATICKET PRO';
 const APP_SUBTITLE = process.env.APP_SUBTITLE || 'Bem-vindo ao Futuro da Automação!';
 const APP_DESCRIPTION = process.env.APP_DESCRIPTION || 'Junte-se a milhares de empresas que já transformaram seus processos';
 const FREE_TRIAL_DAYS = process.env.FREE_TRIAL_DAYS || '7';
 const REDIRECT_URL = process.env.REDIRECT_URL || '';
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Rota para obter configurações da aplicação
 app.get('/api/config', (req, res) => {
@@ -102,7 +102,6 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`Webhook URL: ${WEBHOOK_URL}`);
   console.log(`App Title: ${APP_TITLE}`);
-  console.log('Configurações carregadas do arquivo .env');
 });
 
 module.exports = app;
